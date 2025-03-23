@@ -84,7 +84,7 @@
 
 ## 📽️ 제스처 프로젝트 시연 영상
 
-[👉 시연 영상 보러가기](https://youtu.be/s8UkQNZM8N8?si=ThqVXTJc3yFzXtc6)
+[👉 시연 영상 보러가기](https://youtu.be/9fb1HdHUwW4?si=T2Esq8l_sRFXCGZn)
 
 ---
 
