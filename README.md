@@ -120,16 +120,11 @@
 
 | 제스처 모드 예시 | 설명 | 예시 이미지 |
 |------------------|------|--------------|
-| 0개 (주먹)       | 시스템 OFF |![KakaoTalk_20250323_173719256](https://github.com/user-attachments/assets/5a60836e-64a8-4d47-8d49-2fd0e2406909)
- |
-| 1개 손가락       | Emergency 모드 | ![KakaoTalk_20250323_173552947](https://github.com/user-attachments/assets/e2b84cd3-979d-464d-bc16-df26df57049e)
- |
-| 2개 손가락       | Blinking 모드 | ![KakaoTalk_20250323_173418305](https://github.com/user-attachments/assets/1efbe763-6328-48f6-bdf8-f3cfee7d352f)
- |
-| 5개 손가락       | Normal 모드 | ![KakaoTalk_20250323_173114182](https://github.com/user-attachments/assets/00cb1747-ace7-4c7c-ada3-0a51404070f4)
- |
-| 3↔4 변화         | 색상 순환 변경 | ![KakaoTalk_20250323_173628394](https://github.com/user-attachments/assets/de3156ae-0fe6-42cb-8f28-ef79e27c99b3)
- |
+| 0개 (주먹)       | 시스템 OFF |![KakaoTalk_20250323_173719256](https://github.com/user-attachments/assets/5a60836e-64a8-4d47-8d49-2fd0e2406909) |
+| 1개 손가락       | Emergency 모드 | ![KakaoTalk_20250323_173552947](https://github.com/user-attachments/assets/e2b84cd3-979d-464d-bc16-df26df57049e)|
+| 2개 손가락       | Blinking 모드 | ![KakaoTalk_20250323_173418305](https://github.com/user-attachments/assets/1efbe763-6328-48f6-bdf8-f3cfee7d352f)|
+| 5개 손가락       | Normal 모드 | ![KakaoTalk_20250323_173114182](https://github.com/user-attachments/assets/00cb1747-ace7-4c7c-ada3-0a51404070f4)|
+| 3↔4 변화         | 색상 순환 변경 | ![KakaoTalk_20250323_173628394](https://github.com/user-attachments/assets/de3156ae-0fe6-42cb-8f28-ef79e27c99b3)|
 
 ---
 
