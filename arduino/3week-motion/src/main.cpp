@@ -1,7 +1,7 @@
 /**
  * 아두이노 + TaskScheduler 기반 신호등 시스템
  * - 3색 LED를 이용한 신호등 구현
- * - 버튼으로 이머전시, 블링크, 전원 on/off 모드 제어
+ * - 버튼 또는 시리얼로 모드 전환 (EMERGENCY, BLINKING, OFF, NORMAL)
  * - 시리얼 통신으로 상태 전송 및 웹 슬라이더로 주기 제어
  */
 
@@ -51,16 +51,14 @@
  Task taskEmergency(100, TASK_FOREVER, &emergencyModeOn, &runner, false);
  Task taskSendTrafficState(500, TASK_FOREVER, &sendTrafficLightState, &runner, true);
  
- int previousBrightness = -1;     // 직전 밝기값
- String lastSentState = "";       // 직전 전송된 신호등 상태
+ int previousBrightness = -1;
+ String lastSentState = "";
  
- // 가변저항 값으로 LED 밝기 조절
  void updateLEDBrightness() {
    int sensorValue = analogRead(POTENTIOMETER_PIN);
    ledBrightness = map(sensorValue, 0, 1023, 0, 255);
  }
  
- // 현재 신호등 상태를 시리얼로 전송
  void sendTrafficLightState() {
    String state;
  
@@ -74,20 +72,17 @@
      else if (trafficState >= 3 && trafficState <= 8) state = "GREEN_BLINK";
    }
  
-   // 상태 변경 시에만 전송
    if (state != lastSentState) {
      Serial.print("<" + state + ">");
      lastSentState = state;
    }
  
-   // 밝기 변경 시 전송
    if (ledBrightness != previousBrightness) {
      Serial.print("[BRIGHTNESS:" + String(ledBrightness) + "]");
      previousBrightness = ledBrightness;
    }
  }
  
- // 신호등 단계별 LED 점멸 제어
  void toggleLEDs() {
    unsigned long now = millis();
    checkButtons();
@@ -103,7 +98,6 @@
    }
  }
  
- // 이머전시 모드 - 빨간불만 점등
  void emergencyModeOn() {
    checkButtons();
    updateLEDBrightness();
@@ -112,7 +106,6 @@
    analogWrite(GREEN_LED, 0);
  }
  
- // 블링크 모드 - 3색 깜빡임
  void blinkLEDs() {
    static unsigned long lastBlinkTime = 0;
    unsigned long now = millis();
@@ -134,11 +127,9 @@
    sendTrafficLightState();
  }
  
- // 버튼 상태 체크 및 모드 전환
  void checkButtons() {
    unsigned long currentMillis = millis();
  
-   // 비상 모드 버튼
    if (digitalRead(BTN_EMERGENCY) == LOW && (currentMillis - lastDebounceTimeEmergency > debounceDelay)) {
      emergencyMode = !emergencyMode;
      if (emergencyMode) {
@@ -157,7 +148,6 @@
      while (digitalRead(BTN_EMERGENCY) == LOW);
    }
  
-   // 블링크 모드 버튼
    if (digitalRead(BTN_BLINKING) == LOW && (currentMillis - lastDebounceTimeBlinking > debounceDelay)) {
      blinkingMode = !blinkingMode;
      if (blinkingMode) {
@@ -173,7 +163,6 @@
      while (digitalRead(BTN_BLINKING) == LOW);
    }
  
-   // 시스템 On/Off 버튼
    if (digitalRead(BTN_ONOFF) == LOW && (currentMillis - lastDebounceTimeOnOff > debounceDelay)) {
      systemOn = !systemOn;
      if (systemOn) {
@@ -194,7 +183,6 @@
    }
  }
  
- // 🛠 아두이노 기본 설정
  void setup() {
    pinMode(RED_LED, OUTPUT);
    pinMode(YELLOW_LED, OUTPUT);
@@ -211,14 +199,12 @@
    taskSendTrafficState.enable();
  }
  
- // 🔁 메인 루프
  void loop() {
    checkButtons();
    if (systemOn) {
      runner.execute();
    }
  
-   // 시리얼 명령 수신 처리
    if (Serial.available() > 0) {
      String received = Serial.readStringUntil('>');
      int redDuration, yellowDuration, greenDuration;
@@ -237,9 +223,45 @@
      } else if (received.startsWith("<SET_GREEN:")) {
        trafficDelays[2] = received.substring(11).toInt();
        Serial.println("Green Timing Updated");
+     } else if (received.startsWith("<MODE:")) {
+       String mode = received.substring(6);
+       if (mode == "OFF") {
+         systemOn = false;
+         taskToggleLEDs.disable();
+         taskBlinking.disable();
+         taskEmergency.disable();
+         taskSendTrafficState.disable();
+         digitalWrite(RED_LED, LOW);
+         digitalWrite(YELLOW_LED, LOW);
+         digitalWrite(GREEN_LED, LOW);
+         Serial.println("<OFF>");
+       } else if (mode == "EMERGENCY") {
+         emergencyMode = true;
+         blinkingMode = false;
+         taskEmergency.enable();
+         taskBlinking.disable();
+         taskToggleLEDs.disable();
+         taskSendTrafficState.enable();
+         Serial.println("<EMERGENCY MODE ENABLED>");
+       } else if (mode == "BLINKING") {
+         blinkingMode = true;
+         emergencyMode = false;
+         taskBlinking.enable();
+         taskToggleLEDs.disable();
+         taskSendTrafficState.enable();
+         Serial.println("<BLINKING MODE ENABLED>");
+       } else if (mode == "NORMAL") {
+         systemOn = true;
+         emergencyMode = false;
+         blinkingMode = false;
+         taskEmergency.disable();
+         taskBlinking.disable();
+         taskToggleLEDs.enable();
+         taskSendTrafficState.enable();
+         Serial.println("<NORMAL MODE ENABLED>");
+       }
      } else if (blinkingMode) {
        Serial.println("Ignored: Blinking Mode Active");
      }
    }
  }
- 
