@@ -102,6 +102,79 @@
 | **슬라이더 위치 및 디자인** | 우측 상단 고정<br>선택된 색상 강조 UI 포함 | 색상별 슬라이더 고정 위치 |
 
 ---
+
+물론이죠! 제스처 기반 프로젝트에서 새로 추가된 코드 중 **핵심적인 3가지 중요 부분**을 아래와 같이 정리해 드릴게요:
+
+---
+
+## ✳️ 제스처 제어 프로젝트의 핵심 변경점 설명
+
+### 1. 🖐 **손가락 개수로 모드 제어**  
+```js
+function detectGesture(landmarks) {
+  const count = fingersUp(landmarks);
+  fingerHistory.push(count);
+  if (fingerHistory.length > 5) fingerHistory.shift();
+
+  const avg = Math.round(fingerHistory.reduce((a, b) => a + b, 0) / fingerHistory.length);
+
+  if ((lastFingerCount === 3 && avg === 4) || (lastFingerCount === 4 && avg === 3)) {
+    handleColorChange('next'); // 색상 순환
+  }
+  lastFingerCount = avg;
+
+  // 손가락 수에 따라 모드 전환
+  if (avg === 0) setMode("OFF", "OFF (주먹)");
+  else if (avg === 1) setMode("EMERGENCY", "EMERGENCY (1개)");
+  else if (avg === 2) setMode("BLINKING", "BLINKING (2개)");
+  else if (avg === 5) setMode("NORMAL", "NORMAL (5개)");
+}
+```
+
+** 설명 **:  
+- 손가락 개수를 인식해 **4가지 모드**(OFF/EMERGENCY/BLINKING/NORMAL)로 자동 전환.  
+- 3↔4 손가락 전환 시 색상 변경 트리거로 사용.  
+- `fingerHistory`를 이용해 순간 인식 오류 방지 → 평균 처리로 안정성 향상.
+
+---
+
+### 2. 🎨 **제스처로 색상 순환 (handleColorChange)**  
+```js
+function handleColorChange(dir) {
+  selectedColorIndex = (selectedColorIndex + 1) % colorList.length;
+  selectedColor = colorList[selectedColorIndex];
+  gesture = `🎨 색상 선택: ${selectedColor}`;
+  updateSliderColor();
+}
+```
+
+** 설명 **:  
+- **손가락 3↔4 전환 시마다 색상(빨/노/초) 변경**  
+- `selectedColor` 상태값을 갱신하고, 해당 색상에 따라 슬라이더 UI 색상도 함께 업데이트.
+
+---
+
+### 3. 🎛 **색상별 주기 설정 슬라이더 + 아두이노 전송**  
+```js
+slider.input(async () => {
+  sliderLabel.html(slider.value() + "초");
+  if (!serialPort || !serialPort.writable || selectedColor === "") return;
+
+  const millis = Math.floor(slider.value() * 1000);
+  const encoder = new TextEncoder();
+  const writer = serialPort.writable.getWriter();
+  await writer.write(encoder.encode(`<SET_${selectedColor}:${millis}>`));
+  writer.releaseLock();
+});
+```
+
+** 설명 **:  
+- 슬라이더를 통해 **선택된 색상**의 주기(지속 시간)를 설정  
+- `SET_RED`, `SET_YELLOW`, `SET_GREEN` 형태로 **색상별 지연시간을 아두이노로 전송**  
+- 사용자 인식을 위해 슬라이더 색상도 실시간으로 변경됨
+- 기존의 3개 슬라이더를 하나로 통합 
+
+---
 ## 📦 주요 구성 요소
 
 | 구성 요소         | 설명                                       |
