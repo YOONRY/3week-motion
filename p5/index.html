@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gesture Traffic Light</title>
+</head>
+<body>
+  
+  <h2>🚦 제스처 기반 신호등 제어</h2>
+  <p>상태: <span id="lightState">OFF</span></p>
+  <p>밝기: <span id="brightnessValue">0</span></p>
+  <button onclick="connectSerial()">🛜 아두이노 연결</button>
+
+  <!-- 📦 필수 라이브러리 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.dom.min.js"></script>
+  <script src="https://unpkg.com/ml5@0.12.2/dist/ml5.min.js"></script>
+
+
+  <!-- ✍ 내 스케치 -->
+  <script src="sketch.js"></script>
+</body>
+</html>
