@@ -67,14 +67,6 @@
 
 ---
 
-## 🔗 참고자료
-- [p5.js 공식 문서](https://p5js.org)
-- [Arduino 공식 사이트](https://www.arduino.cc)
-- [Web Serial API 문서](https://developer.mozilla.org/en-US/docs/Web/API/Serial)
-- [챗GPT 활용](https://chat.openai.com)
-
----
-
 # ✨ 제스처 기반 스마트 신호등 프로젝트
 
 이 프로젝트는 **아두이노**와 **p5.js**, **ml5.js**를 활용하여 제스처로 제어 가능한 스마트 신호등 시스템을 구현한 것입니다. 손동작만으로 신호등의 모드 변경, 주기 조절, 색상 변경이 가능합니다.
@@ -171,4 +163,10 @@
 
 ---
 
+## 🔗 참고자료
+- [p5.js 공식 문서](https://p5js.org)
+- [Arduino 공식 사이트](https://www.arduino.cc)
+- [Web Serial API 문서](https://developer.mozilla.org/en-US/docs/Web/API/Serial)
+- [챗GPT 활용](https://chat.openai.com)
 
+---
