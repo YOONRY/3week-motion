@@ -9,13 +9,13 @@
  #include <TaskScheduler.h>
  
  // 🔌 핀 정의
- #define RED_LED 3
- #define YELLOW_LED 9
- #define GREEN_LED 5
- #define BTN_EMERGENCY 6
- #define BTN_BLINKING 7
- #define BTN_ONOFF 8
- #define POTENTIOMETER_PIN A0
+ #define RED_LED 3  // 빨간 LED 핀
+ #define YELLOW_LED 9 // 노란 LED 핀
+ #define GREEN_LED 5 // 초록 LED 핀
+ #define BTN_EMERGENCY 6 // 이머전시 모드 버튼
+ #define BTN_BLINKING 7 // 블링킹 모드 버튼
+ #define BTN_ONOFF 8 // 전원 ON/OFF 버튼
+ #define POTENTIOMETER_PIN A0 // 가변저항 입력 핀
  
  // 🌡 상태 변수
  int ledBrightness = 255;
@@ -59,6 +59,8 @@
    ledBrightness = map(sensorValue, 0, 1023, 0, 255);
  }
  
+
+ // 📤 현재 상태를 시리얼로 전송
  void sendTrafficLightState() {
    String state;
  
@@ -82,7 +84,7 @@
      previousBrightness = ledBrightness;
    }
  }
- 
+ // 🚦 신호등 상태 전환
  void toggleLEDs() {
    unsigned long now = millis();
    checkButtons();
@@ -97,7 +99,8 @@
      analogWrite(GREEN_LED, (trafficState == 2 || trafficState == 3 || trafficState == 5 || trafficState == 7) ? ledBrightness : 0);
    }
  }
- 
+ // 🚨 이머전시 모드
+
  void emergencyModeOn() {
    checkButtons();
    updateLEDBrightness();
@@ -105,7 +108,7 @@
    analogWrite(YELLOW_LED, 0);
    analogWrite(GREEN_LED, 0);
  }
- 
+ // ✨ 블링크 모드
  void blinkLEDs() {
    static unsigned long lastBlinkTime = 0;
    unsigned long now = millis();
@@ -126,7 +129,7 @@
  
    sendTrafficLightState();
  }
- 
+ // 🧲 버튼 입력 체크 및 처리
  void checkButtons() {
    unsigned long currentMillis = millis();
  
@@ -208,7 +211,7 @@
    if (Serial.available() > 0) {
      String received = Serial.readStringUntil('>');
      int redDuration, yellowDuration, greenDuration;
- 
+    // 3가지 시간을 슬라이더로 설정했을 경우
      if (!blinkingMode && sscanf(received.c_str(), "<SET,R:%d,Y:%d,G:%d", &redDuration, &yellowDuration, &greenDuration) == 3) {
        trafficDelays[0] = redDuration;
        trafficDelays[1] = yellowDuration;
