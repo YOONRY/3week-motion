@@ -131,7 +131,7 @@ function detectGesture(landmarks) {
 }
 ```
 
-** 설명 **:  
+**설명**:  
 - 손가락 개수를 인식해 **4가지 모드**(OFF/EMERGENCY/BLINKING/NORMAL)로 자동 전환.  
 - 3↔4 손가락 전환 시 색상 변경 트리거로 사용.  
 - `fingerHistory`를 이용해 순간 인식 오류 방지 → 평균 처리로 안정성 향상.
@@ -148,7 +148,7 @@ function handleColorChange(dir) {
 }
 ```
 
-** 설명 **:  
+**설명**:  
 - **손가락 3↔4 전환 시마다 색상(빨/노/초) 변경**  
 - `selectedColor` 상태값을 갱신하고, 해당 색상에 따라 슬라이더 UI 색상도 함께 업데이트.
 
@@ -168,7 +168,7 @@ slider.input(async () => {
 });
 ```
 
-** 설명 **:  
+**설명**:  
 - 슬라이더를 통해 **선택된 색상**의 주기(지속 시간)를 설정  
 - `SET_RED`, `SET_YELLOW`, `SET_GREEN` 형태로 **색상별 지연시간을 아두이노로 전송**  
 - 사용자 인식을 위해 슬라이더 색상도 실시간으로 변경됨
